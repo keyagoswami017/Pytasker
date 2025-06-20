@@ -11,6 +11,17 @@ const fetchTasks = async () => {
     setTasks(data);
 };
 
+const deleteTask = async (id) => {
+    const response = await fetch(`http://127.0.1:5000/tasks/${id}`, {
+        method: 'DELETE'
+    }); 
+    if (response.ok) {
+        setTasks(tasks.filter(task => task.id !== id));
+    } else {
+        console.error("Failed to delete task:", response.statusText);
+    }
+};
+
     useEffect(() => {
         fetchTasks();
     } , []);
@@ -23,6 +34,12 @@ const fetchTasks = async () => {
                 {tasks.map((task) => (
                     <li key={task.id}>
                         <strong>{task.title}</strong> : {task.description} - {task.status}
+                        <button
+                            onClick={() => deleteTask(task.id)}
+                            style={{ marginLeft: '10px', color: 'red' }}
+                        >
+                            Delete
+                        </button>
                     </li>
                 ))}
             </ul>
